@@ -29,18 +29,21 @@ import java.util.PriorityQueue;
 */
 
 public class TaskManager {
+
     // priority queue to store the tasks
-    private PriorityQueue<Task> tasks = new PriorityQueue<>(new TaskPriorityComparator());
+     private PriorityQueue<Task> tasks = new PriorityQueue<>(new TaskPriorityComparator());
 
     // hash map to store tasks with deadlines
     private HashMap<LocalDate, PriorityQueue<Task>> dateTaskMap = new HashMap<>();
 
+
     // method to add task in the queue and hashmap
     // it will return the id of the task created if successful else it will return 0
     public long addTask(Task task){
-
+        // variable which will be true if task is added to priority queue else false
         boolean success = tasks.add(task);
-        LocalDate currentDate = LocalDate.now();
+        // if the task is added in the priority queue then add in hash map also
+        // hashmap will contain key as deadline and value as priority queue of the tasks
         if(success){
             PriorityQueue<Task> tasksFromMap;
             tasksFromMap = dateTaskMap.get(task.getDeadline());
@@ -52,11 +55,17 @@ public class TaskManager {
                 tasksFromMap.add(task);
                 dateTaskMap.put(task.getDeadline(), tasksFromMap);
             }
+            // return id of task if task is added successfully
             return task.getId();
         }
+
+        // return 0 if task is not added successfully
         return 0;
     }
 
+    // this method is used to dequeue from tasks
+    // it will return the task dequeued if the tasks queue is not empty else
+    // it will return null
     public Task markAsCompleted(){
         Task taskPolled = tasks.poll();
         if(taskPolled == null){
@@ -68,28 +77,45 @@ public class TaskManager {
         return taskPolled;
     }
 
+    // this method returns a priority queue of task filtered with due date
     public PriorityQueue<Task> getTasksWithDueDate(LocalDate date){
-        return dateTaskMap.get(date);
+        return Sorting.sortTaskQueue(dateTaskMap.get(date));
     }
+
+    // this method prints the relation of due date with the tasks
     public void printTasksWithDate(){
         System.out.println(dateTaskMap);
     }
 
+    // this method prints the sorted queue with priority
     public void printTasksInPriority(){
-        PriorityQueue<Task> sortedTasks= Sorting.sortTaskQueue(tasks);
-        System.out.println(sortedTasks);
+        if(tasks.size()==0)
+            System.out.println("There are no tasks left.");
+        else{
+            PriorityQueue<Task> sortedTasks= Sorting.sortTaskQueue(tasks);
+            System.out.println(sortedTasks);
+        }
 
     }
 
+    // this method returns the queue of task having due date as current date
     public PriorityQueue<Task> getTasksWithTodayDeadline(){
         return getTasksWithDueDate(LocalDate.now());
     }
 
+    // this method returns the current task to do as per priority
     public Task getCurrentTask(){
         return tasks.peek();
     }
 
+    // this method returns the total count of tasks to do on the current day
     public int getTotalTasksForToday(){
         return dateTaskMap.get(LocalDate.now()).size();
+    }
+
+    // Method to start the background thread for deadline notifications
+    public void startDeadlineNotifier() {
+        Thread notifierThread = new Thread(new DeadlineNotifier(this));
+        notifierThread.start();
     }
 }

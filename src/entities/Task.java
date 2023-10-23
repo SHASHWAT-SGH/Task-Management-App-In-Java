@@ -3,9 +3,9 @@ package entities;
 import utils.IdGenerator;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 /*
-
             Task is an entity of the project, it has its own fields and methods.
             Each task will contain it's unique id, and other fields such as:
             name, description, deadline, priority and date of creation.
@@ -21,6 +21,7 @@ public class Task {
     private String name; // task name
     private String description; // task description
     private LocalDate deadline; // deadline of the task
+    private LocalTime deadlineTiming; // deadline time
     private int priority; // priority of task, lower the number higher the priority
     private LocalDate dateCreated; // date on which the task was created
 
@@ -32,16 +33,18 @@ public class Task {
         this.deadline = null;
         this.priority = -1;
         this.dateCreated = LocalDate.now();
+        this.deadlineTiming = LocalTime.parse("00:00:00");
     }
 
     // constructor which takes name, description, deadline and priority : automatically assigns id and dateCreated
-    public Task(String name, String description, LocalDate deadline, int priority) {
+    public Task(String name, String description, LocalDate deadline, int priority, LocalTime deadlineTiming) {
         this.id = IdGenerator.generateId(); // generate id using a util method
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.priority = priority;
         this.dateCreated = LocalDate.now(); // set dateCreated as current date
+        this.deadlineTiming = deadlineTiming;
     }
 
 
@@ -73,6 +76,16 @@ public class Task {
     // setter for deadline
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
+    }
+
+    // getter for deadline timing
+    public LocalTime getDeadlineTiming() {
+        return deadlineTiming;
+    }
+
+    // setter for timing
+    public void setDeadlineTiming(LocalTime deadlineTiming) {
+        this.deadlineTiming = deadlineTiming;
     }
 
     // getter for priority
