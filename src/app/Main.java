@@ -147,7 +147,9 @@ public class Main {
                 case 5:
                     // Show tasks with today's deadline
                     PriorityQueue<Task> tasks = app.getTasksWithTodayDeadline();
-                    System.out.println(tasks);
+                    if(tasks != null)
+                        System.out.println(tasks);
+                    else System.out.println("No task is having deadline as today.");
                     break;
 
                 case 6:
@@ -167,7 +169,7 @@ public class Main {
 
 
                     tasks = app.getTasksWithDueDate(date);
-                    if(tasks.size() == 0){
+                    if(tasks == null || tasks.isEmpty()){
                         System.out.println("No task with due date "+ date);
                     }else
                         System.out.println(tasks);

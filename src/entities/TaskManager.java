@@ -79,7 +79,11 @@ public class TaskManager {
 
     // this method returns a priority queue of task filtered with due date
     public PriorityQueue<Task> getTasksWithDueDate(LocalDate date){
-        return Sorting.sortTaskQueue(dateTaskMap.get(date));
+        PriorityQueue<Task> unsortedTasks = dateTaskMap.get(date);
+        if(unsortedTasks == null || unsortedTasks.isEmpty()){
+            return null;
+        }
+        return Sorting.sortTaskQueue(unsortedTasks);
     }
 
     // this method prints the relation of due date with the tasks
@@ -89,7 +93,7 @@ public class TaskManager {
 
     // this method prints the sorted queue with priority
     public void printTasksInPriority(){
-        if(tasks.size()==0)
+        if(tasks.isEmpty())
             System.out.println("There are no tasks left.");
         else{
             PriorityQueue<Task> sortedTasks= Sorting.sortTaskQueue(tasks);
@@ -110,7 +114,11 @@ public class TaskManager {
 
     // this method returns the total count of tasks to do on the current day
     public int getTotalTasksForToday(){
-        return dateTaskMap.get(LocalDate.now()).size();
+        PriorityQueue<Task> temp  = dateTaskMap.get(LocalDate.now());
+        if(temp == null || temp.isEmpty()){
+            return 0;
+        }
+        return temp.size();
     }
 
     // Method to start the background thread for deadline notifications

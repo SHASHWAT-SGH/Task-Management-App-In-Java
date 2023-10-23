@@ -36,15 +36,17 @@ public class DeadlineNotifier implements Runnable {
                     LocalTime timeUntilDeadline = task.getDeadlineTiming();
                     Duration timeRemaining = Duration.between(currentTime, timeUntilDeadline);
 
-                    // Check if the deadline is within 30 minutes
-                    if (timeRemaining.toMinutes() % 60 < 30 ) {
-                        System.out.println("Upcoming deadline in 30 minutes: " + task);
+                    // Check if the deadline is within 6 hours
+                    if (timeRemaining.toMinutes() % 60 < 360 ) {
+                        System.out.println("\t\t\t\t***************   Upcoming deadline in 6 hours   *******************");
+                        System.out.println(task);
+                        System.out.println("\t\t\t\t***************   Upcoming deadline in 6 hours   *******************");
                     }
                 }
 
             try {
                 // Sleep for a while before checking again
-                Thread.sleep(60000); // Adjust the interval as needed current is : 1 minute
+                Thread.sleep(1800000); // Adjust the interval as needed current is : 30 minute
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
